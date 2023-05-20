@@ -57,21 +57,16 @@ defmodule Membrane.H265 do
   """
   @type profile_t ::
           :main
-          | :main_intra
-          | :main_444
-          | :main_444_intra
           | :main_10
-          | :main_10_intra
-          | :main_444_10
-          | :main_444_10_intra
           | :main_still_picture
+          | :rext
 
   @typedoc """
   Format definition for H265 video stream.
 
   Regardless of the `alignment` value, NAL units are always in the Annex B format.
 
-  In Annex B (defined in ITU-T H.265 Recommendation](http://www.itu.int/rec/T-REC-H.264-201704-I/en))
+  In Annex B [defined in ITU-T H.265 Recommendation](http://itu.int/itu-t/recommendations/rec.aspx?rec=14660&lang=en)
   each NAL unit is preceded by three or four-byte start code (`0x(00)000001`)
   that helps to identify boundaries.
   Annex B is suitable for writing to a file or streaming with MPEG-TS.
