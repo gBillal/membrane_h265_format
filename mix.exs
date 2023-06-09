@@ -57,11 +57,10 @@ defmodule Membrane.H265.Mixfile do
 
   defp package do
     [
-      maintainers: ["Membrane Team"],
+      maintainers: ["Billal Ghilas"],
       licenses: ["Apache-2.0"],
       links: %{
-        "GitHub" => @github_url,
-        "Membrane Framework Homepage" => "https://membraneframework.org"
+        "GitHub" => @github_url
       }
     ]
   end

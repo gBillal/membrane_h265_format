@@ -5,14 +5,14 @@ This package provides H265 video format definition (so-called caps) for the [Mem
 
 ## Installation
 
-Unless you're developing an Membrane Element it's unlikely that you need to use this package directly in your app, as normally it is going to be fetched as a dependency of any element that operates on H265 video stream.
+Unless you're developing a Membrane Element it's unlikely that you need to use this package directly in your app, as normally it is going to be fetched as a dependency of any element that operates on H265 video stream.
 
 However, if you are developing an Element or need to add it due to any other reason, just add the following line to your `deps` in the `mix.exs` and run mix `deps.get`.
 
 ```elixir
 def deps do
   [
-    {:membrane_h265_format, github: "gBillal/membrane_h265_format", tag: "v0.1.0"}
+    {:membrane_h265_format, "~> 0.1.0"}
   ]
 end
 ```
