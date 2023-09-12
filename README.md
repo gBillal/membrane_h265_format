@@ -12,7 +12,7 @@ However, if you are developing an Element or need to add it due to any other rea
 ```elixir
 def deps do
   [
-    {:membrane_h265_format, "~> 0.1.0"}
+    {:membrane_h265_format, "~> 0.2.0"}
   ]
 end
 ```
