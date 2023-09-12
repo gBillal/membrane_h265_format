@@ -27,7 +27,7 @@ defmodule Membrane.H265 do
   If the information about the framerate is not present in the stream, `nil` value
   should be used.
   """
-  @type framerate_t :: {frames :: pos_integer, seconds :: pos_integer} | nil
+  @type framerate_t :: {frames :: pos_integer(), seconds :: pos_integer()} | nil
 
   @typedoc """
   Describes whether and how buffers are aligned.
@@ -53,6 +53,23 @@ defmodule Membrane.H265 do
   @type nalu_in_metadata_t :: boolean()
 
   @typedoc """
+  Describes H265 stream structure.
+
+  Annex B (ITU-T H.265 Recommendation)
+  is suitable for writing to file or streaming with MPEG-TS.
+  In this format each NAL unit is prefixed by three or four-byte start code (`0x(00)000001`)
+  that allows to identify boundaries between them.
+
+  hvc1 and hev1 are described by ISO/IEC 14496-15. In such stream a DCR (Decoder Configuration
+  Record) is included out-of-band and NALUs lack the start codes, but are prefixed with their length.
+  The length of these prefixes is contained in the stream's DCR. HEVC streams are more suitable for
+  placing in containers (e.g. they are used by QuickTime (.mov), MP4, Matroska and FLV).
+  In hvc1 streams PPSs, SPSs and VPSs (Picture Parameter Sets, Sequence Parameter Sets and Video Parameter Sets respectively)
+  are transported in the DCR, when in hev1 they may be also present in the stream (in-band).
+  """
+  @type stream_structure :: :annexb | {:hvc1 | :hev1, dcr :: binary()}
+
+  @typedoc """
   Profiles defining constraints for encoders and requirements from decoders decoding such stream
   """
   @type profile_t ::
@@ -63,13 +80,6 @@ defmodule Membrane.H265 do
 
   @typedoc """
   Format definition for H265 video stream.
-
-  Regardless of the `alignment` value, NAL units are always in the Annex B format.
-
-  In Annex B [defined in ITU-T H.265 Recommendation](http://itu.int/itu-t/recommendations/rec.aspx?rec=14660&lang=en)
-  each NAL unit is preceded by three or four-byte start code (`0x(00)000001`)
-  that helps to identify boundaries.
-  Annex B is suitable for writing to a file or streaming with MPEG-TS.
   """
   @type t :: %__MODULE__{
           width: width_t(),
@@ -77,9 +87,21 @@ defmodule Membrane.H265 do
           framerate: framerate_t(),
           alignment: alignment_t(),
           nalu_in_metadata?: nalu_in_metadata_t(),
-          profile: profile_t()
+          profile: profile_t(),
+          stream_structure: stream_structure()
         }
 
-  @enforce_keys [:width, :height, :profile]
-  defstruct @enforce_keys ++ [alignment: :au, nalu_in_metadata?: false, framerate: nil]
+  defstruct width: nil,
+            height: nil,
+            profile: nil,
+            alignment: :au,
+            nalu_in_metadata?: false,
+            framerate: nil,
+            stream_structure: :annexb
+
+  @doc """
+  Checks if stream structure is :avc1 or :avc3
+  """
+  defguard is_hvc(stream_structure)
+           when tuple_size(stream_structure) == 2 and elem(stream_structure, 0) in [:hvc1, :hev1]
 end
